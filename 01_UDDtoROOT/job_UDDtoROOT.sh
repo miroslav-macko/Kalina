@@ -8,18 +8,19 @@
 	W=${1}
 	Y=${2}
 	i=${3}
-	UDD_FOLD=${4}
+	UDD_BI_FOLD=${4}
 	CUT_FOLD=${5}
 	WORKDIR=${6}
 	CTR_FOLD=${7}
+	CONF_FOLD=${8}
 	
 	DATADIR=${WORKDIR}/${i}
 	
 	export CUT_FOLD
 	export DATADIR
 	
-	source ${THRONG_DIR}/config/supernemo_profile.bash
-	snswmgr_load_stack falaise@2026-02-09
+	#Loading the Falaise version from the configuration file
+	source ${CONF_FOLD}/load_falaise.sh
 	
 	cd ${DATADIR}
 	
@@ -29,7 +30,7 @@
 	echo "UDD->pCD CONVERSION:"
 	echo ""
 	
-	flreconstruct -i ${UDD_FOLD}/snemo_run-${i}_udd.brio \
+	flreconstruct -i ${UDD_BI_FOLD}/snemo_run-${i}_udd.brio \
 	              -p ${CTR_FOLD}/1D-pipeline.conf \
 	              -o ${DATADIR}/${i}_pCD.brio
 	              

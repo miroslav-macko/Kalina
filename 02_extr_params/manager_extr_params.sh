@@ -1,9 +1,8 @@
 #! /bin/sh 
 
-#SNC_FOLD SHOULD LINK TO YAROSLAVA'S SNCalib MODULE TO EXTRACT CALIBRATION CONSTANTS
-SNC_FOLD=/pbs/home/m/mmacko/BB/YAROSLAVA/Calibration_Constants_Extraction/build/SNCalib
-#ROO_FOLD IS AN OUTPUT FOLDER
-ROO_FOLD=/sps/nemo/scratch/mmacko/TEST_KAL
+#Load all the correct paths
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source ${SCRIPT_DIR}/../config/config.sh
    	       
 	#PART WHICH TAKES CALIBRATION WEEKS AND MERGES THEM. IT TAKES INFORMATION FROM DATABASE IN bi207_weeks.list
 	while IFS= read -r line; do
@@ -21,10 +20,14 @@ ROO_FOLD=/sps/nemo/scratch/mmacko/TEST_KAL
   				echo "SENDING CALIBRATION PARAMETER EXTRACTION FROM WEEK ${W}/${Y} TO NODES!"
   				
 				sbatch -J p${W}_${Y} \
-					-o ${WORKDIR}/job_%j_${Y}_${W}_params.log \
-				       ./job_params.sh $W $Y $SNC_FOLD $WORKDIR
+				       -o ${WORKDIR}/job_%j_${Y}_${W}_extr_params.log \
+				       ${SCRIPT_DIR}/job_extr_params.sh ${W} \
+				       			    		${Y} \
+				       			    		${SNC_FOLD} \
+				       			    		${WORKDIR} \
+				       			    		${CONF_FOLD}
 			fi
 			
 	    		i=$((i + 1))
 	  	done
-	done < bi207_weeks.list
+	done < ${BI207W_LIST}
